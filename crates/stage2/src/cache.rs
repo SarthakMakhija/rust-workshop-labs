@@ -69,9 +69,9 @@ mod tests {
     #[test]
     fn attempt_get_a_key_from_empty_cache() {
         let cache = Cache::new();
-        // 🤔 Question: How does the compiler know that .into() should 
-        //   create a CacheKey here? (Hint: Type Inference).
-        let value = cache.get(&"hello".into());
+        // 🤔 Question: This is verbose, Create CacheKey -> Pass String and finally
+        // pass a reference of CacheKey. Can something be done?
+        let value = cache.get(&CacheKey(String::from("hello")));
 
         assert_eq!(value, None);
     }
