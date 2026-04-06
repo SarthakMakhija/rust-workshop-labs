@@ -16,7 +16,9 @@ This is a **multi-crate Rust workspace**. Each folder in `crates/` represents a 
 
 - **`crates/stage1`**: Foundations , Ownership, Strings, and the "Allocation Problem".
 - **`crates/stage2`**: Domain Modeling , Overcoming primitive obsession with the NewType pattern and traits.
-- **... and more to come!**
+
+### 🚨 Important: Go Stage by Stage
+The workshop is designed to be cumulative. Concepts introduced in Stage 1 are essential for Stage 2, and so on. **It is highly recommended to complete each stage sequentially.**
 
 Each stage starts with a template that you will fill in as we progress through the workshop book.
 
@@ -42,11 +44,23 @@ We encourage you to try implementing the logic, observing the compiler errors, a
 
 We've added custom Cargo aliases to make it easy to run tests for specific sections of the workshop.
 
-### Prerequisites
+### 1. Prerequisites
 
 Ensure you have Rust installed on your machine:
 
-### Running Tests
+```bash
+# Install Rust (Mac/Linux)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### 2. Clone the Repository
+
+```bash
+git clone https://github.com/SarthakMakhija/rust-workshop-labs.git
+cd rust-workshop-labs
+```
+
+### 3. Running Tests
 
 To verify your progress for a specific stage, use the following commands (works on Mac, Windows, and Linux):
 
