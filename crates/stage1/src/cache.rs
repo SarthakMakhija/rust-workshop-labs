@@ -60,7 +60,7 @@ mod tests {
         // 🤔 Question: What is the ! after assert_eq?
         // - Is it a function or something else?
         // - Hint: Look at unimplemented! above. Do they share a common trait?
-        assert_eq!(None, value);
+        assert_eq!(value, None);
     }
 
     #[test]
@@ -72,7 +72,7 @@ mod tests {
 
         // ❓ Another allocation just for a lookup...
         let value = cache.get(&String::from("rustconf"));
-        assert_eq!(Some(&String::from("2026")), value);
+        assert_eq!(value, Some(&String::from("2026")));
     }
 
     #[test]
@@ -82,6 +82,6 @@ mod tests {
 
         let value = cache.get(&String::from("non-existent"));
         // 🤔 Question: What is this Option type? How does it help us avoid common bugs in other languages?
-        assert_eq!(None, value);
+        assert_eq!(value, None);
     }
 }
