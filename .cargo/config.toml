@@ -1,4 +1,5 @@
 [alias]
 stage1 = "test -p stage1"
 stage2 = "test -p stage2"
+stage3 = "test -p stage3"
 test-all = "test --workspace"

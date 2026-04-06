@@ -51,14 +51,16 @@ impl Cache {
     }
 
     fn put(&mut self, key: CacheKey, value: CacheValue) {
-        self.entries.insert(key, value);
+        // TODO: Implement insertion into the HashMap
+        unimplemented!()
     }
 
     // 🤔 Question: Why do we need the 'Hash' and 'Eq' traits on CacheKey?
     // - Hint: How does a HashMap know where to store a value?
     // - How does it know if two keys are exactly the same?
     fn get(&self, key: &CacheKey) -> Option<&CacheValue> {
-        self.entries.get(key)
+        // TODO: Implement lookup from the HashMap
+        unimplemented!()
     }
 }
 
