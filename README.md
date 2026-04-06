@@ -16,6 +16,8 @@ This is a **multi-crate Rust workspace**. Each folder in `crates/` represents a 
 
 - **`crates/stage1`**: Foundations , Ownership, Strings, and the "Allocation Problem".
 - **`crates/stage2`**: Domain Modeling , Overcoming primitive obsession with the NewType pattern and traits.
+- **`crates/stage3`**: Abstractions & Generics , Moving from Strings to Universal Types using the Borrow trait.
+- **`crates/stage6`**: Concurrency & Thread Safety , Protecting shared data with locking mechanisms.
 
 ### 🚨 Important: Go Stage by Stage
 The workshop is designed to be cumulative. Concepts introduced in Stage 1 are essential for Stage 2, and so on. **It is highly recommended to complete each stage sequentially.**
@@ -72,6 +74,7 @@ To verify your progress for a specific stage, use the following commands:
 | `cargo stage1`   | Run tests for Stage 1          |
 | `cargo stage2`   | Run tests for Stage 2          |
 | `cargo stage3`   | Run tests for Stage 3          |
+| `cargo stage6`   | Run tests for Stage 6          |
 | `cargo test-all` | Run all tests in the workspace |
 
 ---

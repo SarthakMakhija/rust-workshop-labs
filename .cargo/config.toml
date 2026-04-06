@@ -2,4 +2,5 @@
 stage1 = "test -p stage1"
 stage2 = "test -p stage2"
 stage3 = "test -p stage3"
+stage6 = "test -p stage6"
 test-all = "test --workspace"

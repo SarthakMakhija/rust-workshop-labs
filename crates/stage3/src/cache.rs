@@ -91,7 +91,7 @@ mod tests {
     }
 
     #[test]
-    fn test_different_types() {
+    fn get_existing_key_for_a_non_string_cache() {
         // 🚀 The ultimate flexibility.
         let mut cache = Cache::new();
         cache.put(1, "Sarthak".to_string());
