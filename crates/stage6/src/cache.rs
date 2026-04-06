@@ -41,6 +41,8 @@ where
     // - What happens to the RwLockReadGuard when this function returns?
     // - If we returned a reference to the data (&V), would it still be 
     //   protected by the lock after the function ends?
+    // - How do we return the value (not the reference to the value), given the
+    //   method takes &self?
     fn get<Q>(&self, key: &Q) -> Option<V>
     where
         K: Borrow<Q>,
