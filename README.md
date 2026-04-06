@@ -62,7 +62,10 @@ cd rust-workshop-labs
 
 ### 3. Running Tests
 
-To verify your progress for a specific stage, use the following commands (works on Mac, Windows, and Linux):
+> [!NOTE] 
+> **All tests will fail initially!** Each stage is a template where key logic is replaced with `unimplemented!()`. Your goal throughout the workshop is to these tests pass.
+
+To verify your progress for a specific stage, use the following commands:
 
 | Command          | Action                         |
 |:-----------------|:-------------------------------|
