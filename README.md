@@ -20,6 +20,7 @@ This is a **multi-crate Rust workspace**. Each folder in `crates/` represents a 
 - **`crates/stage6`**: Concurrency & Thread Safety , Protecting shared data with locking mechanisms.
 - **`crates/stage7`**: The Performance Tax , Optimizing shared ownership with Arc.
 - **`crates/stage8`**: Beyond Cloning , Realizing the Zero-Allocation Goal with custom reference guards.
+- **`crates/stage9`**: Shared Ownership , Scaling to multiple threads with Arc<Cache>.
 
 ### 🚨 Important: Go Stage by Stage
 The workshop is designed to be cumulative. Concepts introduced in Stage 1 are essential for Stage 2, and so on. **It is highly recommended to complete each stage sequentially.**
@@ -79,6 +80,7 @@ To verify your progress for a specific stage, use the following commands:
 | `cargo stage6`   | Run tests for Stage 6          |
 | `cargo stage7`   | Run tests for Stage 7          |
 | `cargo stage8`   | Run tests for Stage 8          |
+| `cargo stage9`   | Run tests for Stage 9          |
 | `cargo test-all` | Run all tests in the workspace |
 
 ---
