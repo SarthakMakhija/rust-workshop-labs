@@ -4,6 +4,10 @@ use std::hash::Hash;
 use std::ops::Deref;
 use std::sync::{RwLock, RwLockReadGuard};
 
+// ❓ We've reached the final optimization: Zero-Allocation access.
+// 🤔 Questions: 
+// - If we return a reference directly from a guarded HashMap, why does it fail?
+// - How can we return a reference while keeping the lock alive?
 struct Cache<K, V>
 where
     K: Hash + Eq,
@@ -25,25 +29,38 @@ where
         self.entries.write().unwrap().insert(key, value);
     }
 
+    // 🚀 The Goal: Return a reference to the data without cloning.
+    // 🤔 Questions: 
+    // - What is the '?' operator doing here? (Hint: Early Return).
+    // - Why do we return a 'Ref' struct instead of '&V'?
+    // - Trace the lifetime: If 'Ref' is dropped, what happens to the lock?
     fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
     where
         K: Borrow<Q>,
         Q: Hash + Eq + ?Sized,
     {
-        // TODO: Implement lookup from the HashMap
-        let guard = self.entries.read().unwrap();
-        let value = guard.get(key)?;
-
-        let ptr = value as *const V;
-        Some(Ref::new(guard, ptr))
+        // TODO: Implement zero-copy lookup.
+        // 1. Acquire the read lock.
+        // 2. Get the reference from the map (use the ? operator).
+        // 3. Convert the reference to a raw pointer (*const V).
+        // 4. Return the Ref struct.
+        unimplemented!()
     }
 }
 
+// ❓ This is a "Custom Ref" pattern.
+// 🤔 Questions: 
+// - Why does this struct have a lifetime parameter 'a?
+// - What is the purpose of storing the 'guard' inside this struct?
+// - What is '*const V'? Why can't we just store '&V'? 
+//   (Hint: Search for "Self-Referential Structs" in Rust).
 struct Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
+    // 💡 The Anchor: This keeps the lock alive as long as 'Ref' exists.
     guard: RwLockReadGuard<'a, HashMap<K, V>>,
+    // 💡 The Target: A raw pointer into the data owned by the guard.
     value: *const V,
 }
 
@@ -56,6 +73,12 @@ where
     }
 }
 
+// ❓ Making our custom struct behave like the underlying data.
+// 🤔 Questions: 
+// - Why is the deref implementation marked as 'unsafe'?
+// - Is deref unsafe or the block unsafe?
+// - What invariant are we manually upholding to make this safe?
+// - Compare this to Stage 7: Which one holds the lock for longer?
 impl<'a, K, V> Deref for Ref<'a, K, V>
 where
     K: Hash + Eq,
