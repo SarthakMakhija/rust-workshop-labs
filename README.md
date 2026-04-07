@@ -24,6 +24,7 @@ This is a **multi-crate Rust workspace**. Each folder in `crates/` represents a 
 - **`crates/stage10`**: Scaling Connectivity , Moving from the global lock to a sharded lock design.
 - **`crates/stage11`**: TTL & Background Tasks , Implementing Time-To-Live and background cleanup.
 - **`crates/stage12`**: Observability & Metrics , Tracking performance with atomic counters.
+- **`crates/stage13`**: Lifecycle Management , Mastering the Type-State pattern for safe cache termination.
 
 ### 🚨 Important: Go Stage by Stage
 The workshop is designed to be cumulative. Concepts introduced in Stage 1 are essential for Stage 2, and so on. **It is highly recommended to complete each stage sequentially.**
