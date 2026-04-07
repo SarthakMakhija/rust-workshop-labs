@@ -1,7 +1,8 @@
 use std::borrow::Borrow;
 use std::collections::HashMap;
 use std::hash::Hash;
-use std::sync::{Arc, RwLock};
+use std::ops::Deref;
+use std::sync::{Arc, RwLock, RwLockReadGuard};
 
 // ❓ We've used 'thread::scope' before. Now we want true independence.
 // 🤔 Questions: 
@@ -12,7 +13,7 @@ struct Cache<K, V>
 where
     K: Hash + Eq,
 {
-    entries: RwLock<HashMap<K, Arc<V>>>,
+    entries: RwLock<HashMap<K, V>>,
 }
 
 impl<K, V> Cache<K, V>
@@ -31,13 +32,46 @@ where
         unimplemented!()
     }
 
-    fn get<Q>(&self, key: &Q) -> Option<Arc<V>>
+    fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
     where
         K: Borrow<Q>,
         Q: Hash + Eq + ?Sized,
     {
-        // TODO: Implement thread-safe lookup.
+        // TODO: Implement thread-safe lookup with Zero-Copy access.
         unimplemented!()
+    }
+}
+
+struct Ref<'a, K, V>
+where
+    K: Hash + Eq,
+{
+    pub guard: RwLockReadGuard<'a, HashMap<K, V>>,
+    pub value: *const V,
+}
+
+impl<'a, K, V> Ref<'a, K, V>
+where
+    K: Hash + Eq,
+{
+    pub fn new(guard: RwLockReadGuard<'a, HashMap<K, V>>, value: *const V) -> Ref<'a, K, V> {
+        Self { guard, value }
+    }
+}
+
+impl<'a, K, V> Deref for Ref<'a, K, V>
+where
+    K: Hash + Eq,
+{
+    type Target = V;
+
+    fn deref(&self) -> &Self::Target {
+        // ❓ Dereferencing the raw pointer.
+        // 🤔 Questions:
+        // - Is the 'deref' method itself unsafe, or just the block inside it?
+        // - Why is this "Safe Unsafe"? What invariant are we manually
+        //   upholding here that the compiler can't see?
+        unsafe { &*self.value }
     }
 }
 
