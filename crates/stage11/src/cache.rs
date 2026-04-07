@@ -2,19 +2,24 @@ use crate::shard::{Ref, Shard};
 use std::borrow::Borrow;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::sync::Arc;
+use std::thread;
 use std::time::Duration;
+
+type Shards<K: Hash + Eq + Clone, V> = Arc<Vec<Shard<K, V>>>;
 
 struct Cache<K, V>
 where
-    K: Hash + Eq + Clone,
+    K: Hash + Eq + Clone + Send + Sync + 'static,
+    V: Send + Sync + 'static,
 {
-    shards: Vec<Shard<K, V>>,
+    shards: Shards<K, V>,
     num_shards: usize,
 }
 
 impl<K, V> Cache<K, V>
 where
-    K: Hash + Eq + Clone,
+    K: Hash + Eq + Clone + Send + Sync + 'static,
+    V: Send + Sync + 'static,
 {
     fn new(num_shards: usize) -> Arc<Self> {
         // TODO: Implement sharded initialization.
@@ -49,12 +54,25 @@ where
         key.hash(&mut hasher);
         (hasher.finish() as usize) % self.num_shards
     }
+
+    fn spawn_expired_keys_cleaner(shards: Shards<K, V>) {
+        thread::spawn(move || {
+            let mut shard_index = 0;
+            loop {
+                let shard = shards.get(shard_index).unwrap();
+                shard.cleanup();
+
+                shard_index = (shard_index + 1) % shards.len();
+                thread::sleep(Duration::from_secs(1));
+            }
+        });
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::thread;
     use super::*;
+    use std::thread;
 
     #[test]
     fn attempt_get_a_key_from_empty_cache() {
