@@ -63,14 +63,14 @@ mod tests {
     #[test]
     fn attempt_get_a_key_from_empty_cache() {
         let cache: Cache<String, String> = Cache::new();
-        let value = cache.get(&String::from("test"));
+        let value = cache.get("test");
 
         assert_eq!(value, None);
     }
 
     #[test]
     fn get_existing_key() {
-        let mut cache = Cache::new();
+        let cache = Cache::new();
         cache.put(String::from("rustconf"), String::from("2026"));
 
         let value = cache.get("rustconf").unwrap();
