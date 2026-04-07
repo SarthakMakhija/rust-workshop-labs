@@ -46,15 +46,15 @@ struct Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
-    pub guard: RwLockReadGuard<'a, HashMap<K, V>>,
-    pub value: *const V,
+    guard: RwLockReadGuard<'a, HashMap<K, V>>,
+    value: *const V,
 }
 
 impl<'a, K, V> Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
-    pub fn new(guard: RwLockReadGuard<'a, HashMap<K, V>>, value: *const V) -> Ref<'a, K, V> {
+    fn new(guard: RwLockReadGuard<'a, HashMap<K, V>>, value: *const V) -> Ref<'a, K, V> {
         Self { guard, value }
     }
 }

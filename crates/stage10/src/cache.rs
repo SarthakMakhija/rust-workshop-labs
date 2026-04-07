@@ -9,7 +9,7 @@ use std::sync::{Arc, RwLock, RwLockReadGuard};
 // - If 100 threads try to write to 100 different keys, why do they still block?
 // - What is "Lock Contention"?
 // - How can we "partition" our data so that writers mostly don't interfere?
-pub struct Cache<K, V>
+struct Cache<K, V>
 where
     K: Hash + Eq,
 {
@@ -22,14 +22,14 @@ impl<K, V> Cache<K, V>
 where
     K: Hash + Eq,
 {
-    pub fn new(num_shards: usize) -> Arc<Self> {
+    fn new(num_shards: usize) -> Arc<Self> {
         // TODO: Implement sharded initialization.
         // 1. Create a Vec of 'num_shards' independent RwLocks.
         // 2. Wrap it all in an Arc.
         unimplemented!()
     }
 
-    pub fn put(&self, key: K, value: V) {
+    fn put(&self, key: K, value: V) {
         // TODO: Implement sharded insertion.
         // 1. Find the correct shard index for the key. (Take a look at DefaultHasher).
         // 2. Acquire the write lock on ONLY that shard.
@@ -38,7 +38,7 @@ where
     }
 
     // 🚀 Combining Zero-Copy access with Sharding.
-    pub fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
+    fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
     where
         K: Borrow<Q>,
         Q: Hash + Eq + ?Sized,
@@ -62,19 +62,19 @@ where
     }
 }
 
-pub struct Ref<'a, K, V>
+struct Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
-    pub guard: RwLockReadGuard<'a, HashMap<K, V>>,
-    pub value: *const V,
+    guard: RwLockReadGuard<'a, HashMap<K, V>>,
+    value: *const V,
 }
 
 impl<'a, K, V> Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
-    pub fn new(guard: RwLockReadGuard<'a, HashMap<K, V>>, value: *const V) -> Ref<'a, K, V> {
+    fn new(guard: RwLockReadGuard<'a, HashMap<K, V>>, value: *const V) -> Ref<'a, K, V> {
         Self { guard, value }
     }
 }
