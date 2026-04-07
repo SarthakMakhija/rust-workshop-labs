@@ -51,15 +51,7 @@ where
         // 2. Wrap the value in an 'Entry'.
         // 3. Store in 'entries' (in a scoped write lock).
         // 4. Store in 'ttl_list' (in a scoped write lock).
-        let expires_at = Instant::now() + ttl;
-        {
-            let mut entries = self.entries.write().unwrap();
-            entries.insert(key.clone(), Entry { value, expires_at });
-        }
-        {
-            let mut ttl_list = self.ttl_list.write().unwrap();
-            ttl_list.push((key, expires_at));
-        }
+        unimplemented!()
     }
 
     // ❓ Getting data involves more than just a lookup now.
@@ -77,14 +69,7 @@ where
         // 2. Look up the entry.
         // 3. Check for expiration.
         // 4. Return the Zero-Copy Ref if valid.
-        let guard = self.entries.read().unwrap();
-        let entry = guard.get(key)?;
-        if Instant::now() > entry.expires_at {
-            return None;
-        }
-        let value = &entry.value;
-        let ptr = value as *const V;
-        Some(Ref{guard, value: ptr})
+        unimplemented!()
     }
 
     // 🚀 The Cleanup Phase.
