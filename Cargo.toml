@@ -1,4 +1,4 @@
 [workspace]
 members = [
-    "crates/stage1", "crates/stage2", "crates/stage3", "crates/stage6", "crates/stage7", "crates/stage8", "crates/stage9",
+    "crates/stage1", "crates/stage10", "crates/stage2", "crates/stage3", "crates/stage6", "crates/stage7", "crates/stage8", "crates/stage9",
 ]

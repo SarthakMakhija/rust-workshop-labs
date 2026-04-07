@@ -1,34 +1,33 @@
 use std::borrow::Borrow;
 use std::collections::HashMap;
-use std::hash::Hash;
+use std::hash::{DefaultHasher, Hash, Hasher};
 use std::sync::{Arc, RwLock};
 
-// ❓ We've used 'thread::scope' before. Now we want true independence.
-// 🤔 Questions: 
-// - Why does 'std::thread::spawn' require us to move ownership?
-// - What happens if a spawned thread outlives the 'main' function?
-// - Why can't we just pass a '&Cache' to a spawned thread?
 struct Cache<K, V>
 where
     K: Hash + Eq,
 {
-    entries: RwLock<HashMap<K, Arc<V>>>,
+    shards: Vec<RwLock<HashMap<K, Arc<V>>>>,
+    num_shards: usize,
 }
 
 impl<K, V> Cache<K, V>
 where
     K: Hash + Eq,
 {
-    // 💡 The pattern: Returning an Arc<Self> makes the cache a 
-    //   "Shared Resource" by default.
-    fn new() -> Arc<Cache<K, V>> {
-        // TODO: Implement the Arc-wrapped initialization.
-        unimplemented!()
+    fn new(num_shards: usize) -> Arc<Self> {
+        Arc::new(Self {
+            shards: (0..num_shards)
+                .map(|_| RwLock::new(HashMap::new()))
+                .collect::<Vec<_>>(),
+            num_shards,
+        })
     }
 
     fn put(&self, key: K, value: V) {
         // TODO: Implement thread-safe insertion.
-        unimplemented!()
+        let shard_index = self.shard_index(&key);
+        self.shards[shard_index].write().unwrap().insert(key, Arc::new(value));
     }
 
     fn get<Q>(&self, key: &Q) -> Option<Arc<V>>
@@ -37,7 +36,19 @@ where
         Q: Hash + Eq + ?Sized,
     {
         // TODO: Implement thread-safe lookup.
-        unimplemented!()
+        let shard_index = self.shard_index(key);
+        self.shards[shard_index].read().unwrap().get(key).cloned()
+    }
+
+    fn shard_index<Q>(&self, key: &Q) -> usize
+    where
+        K: Borrow<Q>,
+        Q: Hash + Eq + ?Sized,
+    {
+        let mut hasher = DefaultHasher::new();
+        key.hash(&mut hasher);
+
+        hasher.finish() as usize % self.num_shards
     }
 }
 
@@ -47,7 +58,7 @@ mod tests {
 
     #[test]
     fn attempt_get_a_key_from_empty_cache() {
-        let cache: Arc<Cache<String, String>> = Cache::new();
+        let cache: Arc<Cache<String, String>> = Cache::new(8);
         let value = cache.get("test");
 
         assert!(value.is_none());
@@ -55,7 +66,7 @@ mod tests {
 
     #[test]
     fn get_existing_key() {
-        let cache = Cache::new();
+        let cache = Cache::new(8);
         cache.put(String::from("rustconf"), String::from("2026"));
 
         let value = cache.get("rustconf").unwrap();
@@ -70,17 +81,12 @@ mod concurrency_test {
 
     #[test]
     fn put() {
-        // 💡 We are using Arc::new() in Cache::new(), so we start with a shared handle to cache.
-        let cache = Cache::new();
+        let cache = Cache::new(16);
 
-        // 🚀 Scaling to 10 independent threads.
         let thread_handles = (1..=10)
             .map(|counter| {
-                // ❓ Each thread needs its own OWNED handle.
-                // 🤔 Question: Why do we clone 'cache' inside the map instead of 
-                //   moving the original 'cache' into the first thread?
                 let cache_clone = cache.clone();
-                
+
                 // 💡 The 'move' keyword transfers ownership of the clone into the thread.
                 thread::spawn(move || {
                     cache_clone.put(counter, counter.to_string());
@@ -88,14 +94,10 @@ mod concurrency_test {
             })
             .collect::<Vec<_>>();
 
-        // ❓ Synchronization point.
-        // 🤔 Question: What happens if we try to read from the cache 
-        //   BEFORE joining these threads?
         for handle in thread_handles {
             handle.join().unwrap();
         }
 
-        // 🚀 Verify the results from another set of threads.
         let thread_handles = (1..=10)
             .map(|counter| {
                 let cache_clone = cache.clone();
@@ -105,7 +107,6 @@ mod concurrency_test {
                 })
             }).collect::<Vec<_>>();
 
-        // 💡 Wait for threads to finish.
         for handle in thread_handles {
             handle.join().unwrap();
         }
