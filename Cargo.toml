@@ -9,4 +9,5 @@ members = [
     "crates/stage8",
     "crates/stage9",
     "crates/stage11",
+    "crates/stage12",
 ]
