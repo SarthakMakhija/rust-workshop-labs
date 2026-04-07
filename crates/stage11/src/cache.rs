@@ -3,8 +3,11 @@ use std::borrow::Borrow;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::sync::Arc;
 use std::thread;
+use std::thread::JoinHandle;
 use std::time::Duration;
 
+// 💡Create a type-alias for Shards.
+// 🤔 Question: Why is the Vec<Shard<K, V>> wrapped in Arc?
 type Shards<K: Hash + Eq + Clone, V> = Arc<Vec<Shard<K, V>>>;
 
 struct Cache<K, V>
@@ -23,21 +26,27 @@ where
 {
     fn new(num_shards: usize) -> Arc<Self> {
         // TODO: Implement sharded initialization.
+        // 1. Create the vector of Shards.
+        // 2. Wrap the vector in an Arc to share it with the cleaner thread.
+        // 3. Spawn the background cleaner.
         unimplemented!()
     }
 
+    // ❓ Transparency: The Cache now requires a Duration.
+    // 🤔 Question: Why is it okay for 'put' to remain &self even though 
+    //   it eventually results in a mutation? (Hint: The Shards handle the locks).
     fn put(&self, key: K, value: V, ttl: Duration) {
-        // TODO: Implement sharded insertion.
+        // TODO: Implement sharded insertion by delegating to the correct Shard.
         unimplemented!()
     }
 
-    // 🚀 Combining Zero-Copy access with Sharding.
+    // 🚀 High-performance Lookup.
     fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
     where
         K: Borrow<Q>,
         Q: Hash + Eq + ?Sized,
     {
-        // TODO: Implement sharded zero-copy lookup.
+        // TODO: Implement lookup by delegating to the Shard.
         unimplemented!()
     }
 
@@ -55,17 +64,25 @@ where
         (hasher.finish() as usize) % self.num_shards
     }
 
-    fn spawn_expired_keys_cleaner(shards: Shards<K, V>) {
+    // ❓ The Background Cleaner.
+    // 🤔 Questions:
+    // - This thread uses an infinite 'loop' and 'thread::sleep'. 
+    // - Is this thread "cooperative"?
+    // - What happens to this thread when the 'Cache' is dropped? 
+    // - Hint: Does it leak? How could we signal it to stop safely?
+    fn spawn_expired_keys_cleaner(shards: Shards<K, V>) -> JoinHandle<()> {
         thread::spawn(move || {
             let mut shard_index = 0;
             loop {
+                // 💡 Strategy: Clean one shard, sleep, then move to the next.
+                // This spreads the "Cleanup Tax" over time.
                 let shard = shards.get(shard_index).unwrap();
                 shard.cleanup();
 
                 shard_index = (shard_index + 1) % shards.len();
                 thread::sleep(Duration::from_secs(1));
             }
-        });
+        })
     }
 }
 
