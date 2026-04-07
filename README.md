@@ -87,6 +87,7 @@ To verify your progress for a specific stage, use the following commands:
 | `cargo stage10`  | Run tests for Stage 10         |
 | `cargo stage11`  | Run tests for Stage 11         |
 | `cargo stage12`  | Run tests for Stage 12         |
+| `cargo stage13`  | Run tests for Stage 13         |
 | `cargo test-all` | Run all tests in the workspace |
 
 ---
