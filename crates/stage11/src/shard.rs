@@ -20,7 +20,7 @@ struct Entry<V> {
 // - Why do we store the expiration in BOTH the Entry and a separate 'ttl_list'?
 // - Hint: How would a background thread find expired keys without scanning 
 //   the entire HashMap (which could have millions of entries)?
-struct Shard<K, V>
+pub(crate) struct Shard<K, V>
 where
     K: Hash + Eq + Clone,
 {
@@ -33,7 +33,7 @@ impl<K, V> Shard<K, V>
 where
     K: Hash + Eq + Clone,
 {
-    fn new() -> Shard<K, V> {
+    pub(crate) fn new() -> Shard<K, V> {
         Self {
             entries: RwLock::new(HashMap::new()),
             ttl_list: RwLock::new(Vec::new()),
@@ -45,7 +45,7 @@ where
     // - Can we reduce the scope of these locks in put?
     // - What is "Lock Contention"? How do these small scopes help?
     // - Why do we need to 'key.clone()' when inserting into the entries map?
-    fn put(&self, key: K, value: V, ttl: Duration) {
+    pub(crate) fn put(&self, key: K, value: V, ttl: Duration) {
         // TODO: Implement sharded insertion with TTL.
         // 1. Calculate the 'expires_at' Instant.
         // 2. Wrap the value in an 'Entry'.
@@ -59,7 +59,7 @@ where
     // - What is "Lazy Expiration"? 
     // - If we find an expired entity, why do we return 'None' even if
     //   it's still physically present in the HashMap?
-    fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
+    pub(crate) fn get<Q>(&self, key: &Q) -> Option<Ref<'_, K, V>>
     where
         K: Borrow<Q>,
         Q: Hash + Eq + ?Sized,
@@ -79,7 +79,7 @@ where
     // - Phase 1: Retaining non-expired keys and collecting expired ones.
     // - Phase 2: Removing from the entries map.
     // - What would happen if we held BOTH locks simultaneously for the entire duration?
-    fn cleanup(&self) {
+    pub(crate) fn cleanup(&self) {
         // TODO: Implement the two-phase cleanup.
         // 1. Acquire write lock on 'ttl_list'.
         // 2. Use 'retain' to remove expired items and collect their keys.
@@ -89,7 +89,7 @@ where
     }
 }
 
-struct Ref<'a, K, V>
+pub(crate) struct Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
@@ -101,7 +101,7 @@ impl<'a, K, V> Ref<'a, K, V>
 where
     K: Hash + Eq,
 {
-    fn new(guard: RwLockReadGuard<'a, HashMap<K, Entry<V>>>, value: *const V) -> Ref<'a, K, V> {
+    pub(crate) fn new(guard: RwLockReadGuard<'a, HashMap<K, Entry<V>>>, value: *const V) -> Ref<'a, K, V> {
         Self { guard, value }
     }
 }
