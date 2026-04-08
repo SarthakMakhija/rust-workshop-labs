@@ -46,7 +46,6 @@ where
     // - What is "Lock Contention"? How do these small scopes help?
     // - Why do we need to 'key.clone()' when inserting into the entries map?
     pub(crate) fn put(&self, key: K, value: V, ttl: Duration) {
-        // TODO: Implement sharded insertion with TTL.
         // 1. Calculate the 'expires_at' Instant.
         // 2. Wrap the value in an 'Entry'.
         // 3. Store in 'entries' (in a scoped write lock).
@@ -81,7 +80,6 @@ where
         if  Instant::now() > entry.expires_at  {
             return None;
         }
-
         let value = &entry.value;
         let ptr = value as *const V;
 
@@ -94,12 +92,14 @@ where
     // - Why do we perform the cleanup in TWO distinct phases?
     // - Phase 1: Retaining non-expired keys and collecting expired ones.
     // - Phase 2: Removing from the entries map.
-    // - What would happen if we held BOTH locks simultaneously for the entire duration?
+    //
+    // 💡 The Cloning "Tax": 
+    // - Notice that we 'clone()' the key on line 110. 
+    // - Why? Because we must release the 'ttl_list' lock as soon as possible (Line 116)
+    //   before we attempt to acquire the 'entries' lock (Line 119).
+    // - If we didn't clone, we wouldn't be able to keep the keys alive once 
+    //   the Phase 1 lock is dropped!
     pub(crate) fn cleanup(&self) {
-        // 1. Acquire write lock on 'ttl_list'.
-        // 2. Use 'retain' to remove expired items and collect their keys.
-        // 3. Drop the 'ttl_list' lock as soon as possible!
-        // 4. Acquire write lock on 'entries' only if there are keys to remove.
         let now = Instant::now();
         let mut expired_keys = Vec::new();
         {
@@ -107,6 +107,9 @@ where
 
             guard.retain(|(key, expiry)| {
                 if *expiry <= now {
+                    // 💡 Collecting state
+                    // 🤔 Question:
+                    // - Can we just add the key reference in expired_keys?
                     expired_keys.push(key.clone());
                     return false;
                 } else {

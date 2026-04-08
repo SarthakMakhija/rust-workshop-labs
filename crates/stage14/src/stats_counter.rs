@@ -57,23 +57,23 @@ impl PaddedStatsCounter {
         self.increase(StatsType::PUTS, 1);
     }
 
-    fn hits(&self) -> usize {
+    pub(crate) fn hits(&self) -> usize {
         self.get(StatsType::HITS)
     }
 
-    fn misses(&self) -> usize {
+    pub(crate) fn misses(&self) -> usize {
         self.get(StatsType::MISSES)
     }
 
-    fn puts(&self) -> usize {
+    pub(crate) fn puts(&self) -> usize {
         self.get(StatsType::PUTS)
     }
 
-    fn gets(&self) -> usize {
+    pub(crate) fn gets(&self) -> usize {
         self.get(StatsType::GETS)
     }
 
-    fn hit_ratio(&self) -> f64 {
+    pub(crate) fn hit_ratio(&self) -> f64 {
         let (hits, misses) = (self.hits(), self.misses());
         if misses == 0 {
             return 0.0;

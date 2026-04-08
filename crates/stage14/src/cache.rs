@@ -95,6 +95,13 @@ where
             }
         })
     }
+
+    pub(crate) fn shard_index<Q>(&self, key: &Q) -> usize
+    where
+        Q: Hash + ?Sized,
+    {
+        self.inner.shard_index(key)
+    }
 }
 
 impl<K, V> Clone for Cache<K, V>
@@ -121,9 +128,9 @@ where
     K: Hash + Eq + Clone + Send + Sync + 'static,
     V: Send + Sync + 'static,
 {
-    shards: Vec<Shard<K, V>>,
-    num_shards: usize,
-    shutting_down: AtomicBool,
+    pub(crate) shards: Vec<Shard<K, V>>,
+    pub(crate) num_shards: usize,
+    pub(crate) shutting_down: AtomicBool,
 }
 
 impl<K, V> CacheInner<K, V>
@@ -170,7 +177,7 @@ where
         self.shutting_down.store(true, Ordering::Release);
     }
 
-    fn shard_index<Q>(&self, key: &Q) -> usize
+    pub(crate) fn shard_index<Q>(&self, key: &Q) -> usize
     where
         Q: Hash + ?Sized,
     {
@@ -253,6 +260,28 @@ mod tests {
         let result = cache_clone.get("key");
         assert!(result.is_err());
         assert!(matches!(result, Err(CacheError::ShuttingDown)));
+    }
+
+    #[test]
+    fn capture_metrics() {
+        let cache = Cache::new(8);
+        
+        // 1. Initial State
+        assert_eq!(cache.stats_counter.puts(), 0);
+        
+        // 2. Put
+        cache.put("key".to_string(), "val".to_string(), Duration::from_secs(10)).unwrap();
+        assert_eq!(cache.stats_counter.puts(), 1);
+        
+        // 3. Hit
+        let _ = cache.get("key");
+        assert_eq!(cache.stats_counter.hits(), 1);
+        
+        // 4. Miss
+        let _ = cache.get("non-existent");
+        assert_eq!(cache.stats_counter.misses(), 1);
+        
+        cache.shutdown();
     }
 }
 
