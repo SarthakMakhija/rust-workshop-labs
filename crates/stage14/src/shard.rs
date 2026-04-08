@@ -105,9 +105,9 @@ where
         {
             let mut guard = self.ttl_list.write().unwrap();
 
-            guard.retain(|entry_pair| {
-                if entry_pair.1 <= now {
-                    expired_keys.push(entry_pair.0.clone());
+            guard.retain(|(key, expiry)| {
+                if *expiry <= now {
+                    expired_keys.push(key.clone());
                     return false;
                 } else {
                     true
