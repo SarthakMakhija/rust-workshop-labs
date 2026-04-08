@@ -62,3 +62,10 @@ version = "0.1.0"
 [[package]]
 name = "stage9"
 version = "0.1.0"
+
+[[package]]
+name = "tinycache"
+version = "0.1.0"
+dependencies = [
+ "crossbeam-utils",
+]
