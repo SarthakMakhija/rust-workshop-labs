@@ -40,6 +40,10 @@ name = "stage3"
 version = "0.1.0"
 
 [[package]]
+name = "stage4"
+version = "0.1.0"
+
+[[package]]
 name = "stage6"
 version = "0.1.0"
 
