@@ -1,4 +1,4 @@
-# Stage 10: Scale and Sharding — Minimizing Contention
+# Stage 10: Scale and Sharding : Minimizing Contention
 
 Stage 10 focuses on **Scaling**. We move away from a single "Global Lock" and introduce **Sharding** to allow true parallel throughput.
 

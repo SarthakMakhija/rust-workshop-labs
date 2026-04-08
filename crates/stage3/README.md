@@ -1,4 +1,4 @@
-# Stage 3: Generic Abstractions — Flexibility & Performance
+# Stage 3: Generic Abstractions : Flexibility & Performance
 
 In Stage 3, we evolve our cache from a specific `String`-based implementation to a truly universal, generic data structure.
 

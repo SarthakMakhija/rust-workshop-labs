@@ -1,4 +1,4 @@
-# Stage 1: Foundations — The Allocation Problem
+# Stage 1: Foundations : The Allocation Problem
 
 Welcome to the first stage of the workshop! Here, we lay the groundwork for our concurrent cache by exploring Rust's core memory model.
 

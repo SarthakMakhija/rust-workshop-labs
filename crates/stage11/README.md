@@ -1,4 +1,4 @@
-# Stage 11: Real-World Latency — Time-To-Live & Background Cleanup
+# Stage 11: Real-World Latency : Time-To-Live & Background Cleanup
 
 In Stage 11, we add a critical production feature: **Cache Expiration**. We implement Time-To-Live (TTL) and spawn background threads to keep our memory usage bounded.
 

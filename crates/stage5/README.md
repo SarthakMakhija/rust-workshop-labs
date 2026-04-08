@@ -1,4 +1,4 @@
-# Stage 5: Interior Mutability — The RefCell Escape Hatch
+# Stage 5: Interior Mutability : The RefCell Escape Hatch
 
 Welcome to Stage 5! We are introducing **Interior Mutability**, a powerful pattern that allows us to bypass some of the compiler's strict compile-time checks in exchange for runtime safety.
 

@@ -1,4 +1,4 @@
-# Stage 9: Foundation of Concurrency — Send & Sync
+# Stage 9: Foundation of Concurrency : Send & Sync
 
 In Stage 9, we dive deep into the traits that make Rust's "Fearless Concurrency" possible: **Send** and **Sync**.
 

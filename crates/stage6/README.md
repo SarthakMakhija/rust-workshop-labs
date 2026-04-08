@@ -1,4 +1,4 @@
-# Stage 6: Fearless Concurrency — Mutex & RwLock
+# Stage 6: Fearless Concurrency : Mutex & RwLock
 
 Stage 6 marks our transition into a multi-threaded world. We introduce the synchronization primitives required to protect shared data from concurrent access.
 

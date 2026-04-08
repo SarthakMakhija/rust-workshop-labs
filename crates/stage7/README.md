@@ -1,4 +1,4 @@
-# Stage 7: Reference Counting — Shared Ownership with Arc
+# Stage 7: Reference Counting : Shared Ownership with Arc
 
 In Stage 7, we solve the problem of sharing data across many different handles using **Arc** (Atomic Reference Counting).
 

@@ -1,4 +1,4 @@
-# Stage 13: Graceful Termination — Lifecycle & Type-States
+# Stage 13: Graceful Termination : Lifecycle & Type-States
 
 In Stage 13, we master **System Lifecycles**. We implement the **Handle-Body Pattern** and use **Atomic Coordination** to ensure our cache shuts down safely without leaking threads or memory.
 

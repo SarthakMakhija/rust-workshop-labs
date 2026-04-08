@@ -1,4 +1,4 @@
-# Stage 4: Mutation vs Aliasing — The Ownership Paradox
+# Stage 4: Mutation vs Aliasing : The Ownership Paradox
 
 Stage 4 introduces the concept of **Safe Mutation**. We explore how to update data in the cache while adhering to Rust's fundamental rule: "Shared XOR Mutable."
 

@@ -1,4 +1,4 @@
-# Stage 12: Atomic Mechanics — Metrics & False Sharing
+# Stage 12: Atomic Mechanics : Metrics & False Sharing
 
 Stage 12 is about **Observability** and **Extreme Optimization**. We add atomic performance counters and tackle hardware-level bottlenecks like False Sharing.
 

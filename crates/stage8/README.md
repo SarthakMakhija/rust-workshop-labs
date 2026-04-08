@@ -1,4 +1,4 @@
-# Stage 8: Advanced Memory — Zero-Copy References
+# Stage 8: Advanced Memory : Zero-Copy References
 
 In Stage 8, we reach a performance milestone: returning a reference to the data without cloning the data **or** the `Arc` handle.
 
