@@ -6,7 +6,7 @@ use std::sync::RwLock;
 // ❓ Our Cache is generic and safe, but only in a single thread.
 // 🤔 Questions: 
 // - What happens if we try to share a '&mut Cache' across threads?
-// - Hint: Search for the "Shared XOR Mutable" rule in Rust.
+// - 💡Hint: Search for the "Shared XOR Mutable" rule in Rust.
 // - Why are we using 'RwLock' instead of a regular 'Mutex'?
 struct Cache<K, V>
 where

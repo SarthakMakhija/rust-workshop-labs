@@ -51,7 +51,7 @@ where
     // 🤔 Questions:
     // - Why do we pay a "Hashing Tax" on every access?
     // - Why is the shard count often a "Power of 2" in production?
-    //   (Hint: Bitwise AND vs Modulo operator).
+    //   (💡Hint: Bitwise AND vs Modulo operator).
     fn shard_index<Q>(&self, key: &Q) -> usize
     where
         Q: Hash + ?Sized,

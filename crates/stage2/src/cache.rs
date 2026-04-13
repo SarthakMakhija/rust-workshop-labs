@@ -56,7 +56,7 @@ impl Cache {
     }
 
     // 🤔 Question: Why do we need the 'Hash' and 'Eq' traits on CacheKey?
-    // - Hint: How does a HashMap know where to store a value?
+    // - 💡Hint: How does a HashMap know where to store a value?
     // - How does it know if two keys are exactly the same?
     fn get(&self, key: &CacheKey) -> Option<&CacheValue> {
         // TODO: Implement lookup from the HashMap

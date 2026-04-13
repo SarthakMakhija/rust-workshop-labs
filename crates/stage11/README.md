@@ -13,7 +13,7 @@ A cache that never forgets is just a memory leak! In this stage, you will add a 
 
 ### Key Questions to Consider:
 - `❓` If the background thread is busy cleaning Shard A, does it block a user from reading from Shard B?
-- `🤔` What happens to the background thread if the `Cache` object is dropped? (Hint: Does the thread keep running forever?).
+- `🤔` What happens to the background thread if the `Cache` object is dropped? (💡Hint: Does the thread keep running forever?).
 
 ## 🚀 Getting Started
 Ensure you are in the project root and run:

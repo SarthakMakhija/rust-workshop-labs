@@ -30,7 +30,7 @@ impl Cache {
     // ❓ This method currently expects `&String`.
     // 🤔 Questions:
     // - What happens if you try to call get("key")? Try it and observe the compiler error.
-    // - Hint: This is known as "The Allocation Problem". We are forced to 
+    // - 💡Hint: This is known as "The Allocation Problem". We are forced to
     //   allocate a full String on the heap just to perform a lookup!
     //
     // 🤔 Questions:
@@ -59,7 +59,7 @@ mod tests {
 
         // 🤔 Question: What is the ! after assert_eq?
         // - Is it a function or something else?
-        // - Hint: Look at unimplemented! above. Do they share a common trait?
+        // - 💡Hint: Look at unimplemented! above. Do they share a common trait?
         assert_eq!(value, None);
     }
 

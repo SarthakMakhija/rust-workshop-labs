@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 // ❓ Recording metrics in a high-concurrency environment is a unique challenge.
 // 🤔 Questions: 
 // - Why is using a 'Mutex' or 'RwLock' around a simple integer counter "overkill"?
-// - What is the "Lock Tax"? (Hint: Think about OS context switches vs hardware instructions).
+// - What is the "Lock Tax"? (💡Hint: Think about OS context switches vs hardware instructions).
 enum StatsType {
     HITS = 0,
     MISSES = 1,

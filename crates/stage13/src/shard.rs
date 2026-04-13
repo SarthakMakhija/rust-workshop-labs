@@ -18,7 +18,7 @@ struct Entry<V> {
 // ❓ A Shard now manages two distinct pieces of state.
 // 🤔 Questions: 
 // - Why do we store the expiration in BOTH the Entry and a separate 'ttl_list'?
-// - Hint: How would a background thread find expired keys without scanning 
+// - 💡Hint: How would a background thread find expired keys without scanning
 //   the entire HashMap (which could have millions of entries)?
 pub(crate) struct Shard<K, V>
 where

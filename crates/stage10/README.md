@@ -13,7 +13,7 @@ In Stage 9, even with thread-safe atomics, we had a single `RwLock` protecting t
 
 ### Key Questions to Consider:
 - `❓` Does sharding improve performance for a single-threaded application?
-- `🤔` How do we decide the optimal number of shards? (Hint: Think about your CPU core count).
+- `🤔` How do we decide the optimal number of shards? (💡Hint: Think about your CPU core count).
 
 ## 🚀 Getting Started
 Ensure you are in the project root and run:
