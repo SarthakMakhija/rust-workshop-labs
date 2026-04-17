@@ -4,7 +4,7 @@ use std::hash::Hash;
 use std::sync::RwLock;
 
 // ❓ Our Cache is generic and safe, but only in a single thread.
-// 🤔 Questions: 
+// 🤔 Questions:
 // - What happens if we try to share a '&mut Cache' across threads?
 // - 💡Hint: Search for the "Shared XOR Mutable" rule in Rust.
 // - Why are we using 'RwLock' instead of a regular 'Mutex'?
@@ -12,9 +12,9 @@ struct Cache<K, V>
 where
     K: Hash + Eq,
 {
-    // 💡 Interior Mutability: Turning a Shared Reference (&) 
+    // 💡 Interior Mutability: Turning a Shared Reference (&)
     //   into a Mutable Reference (&mut) safely at runtime.
-    entries: RwLock<HashMap<K, V>>
+    entries: RwLock<HashMap<K, V>>,
 }
 
 impl<K, V> Cache<K, V>
@@ -24,7 +24,7 @@ where
 {
     fn new() -> Cache<K, V> {
         Self {
-            entries: RwLock::new(HashMap::new())
+            entries: RwLock::new(HashMap::new()),
         }
     }
 
@@ -32,14 +32,15 @@ where
     // 🤔 Question: Do we need &mut self? If yes, why? If not, why?
     fn put(&self, key: K, value: V) {
         // TODO: Implement insertion into the HashMap
-        unimplemented!()
+        self.entries.write().unwrap().insert(key, value);
+        //unimplemented!()
     }
 
     // ❓ The Lifetime Paradox.
-    // 🤔 Questions: 
+    // 🤔 Questions:
     // - Why does this 'get' return 'Option<V>' instead of 'Option<&V>'?
     // - What happens to the RwLockReadGuard when this function returns?
-    // - If we returned a reference to the data (&V), would it still be 
+    // - If we returned a reference to the data (&V), would it still be
     //   protected by the lock after the function ends?
     // - How do we return the value (not the reference to the value), given the
     //   method takes &self?
@@ -49,16 +50,18 @@ where
         Q: Hash + Eq + ?Sized,
     {
         // 🚀 The RAII Guard: Locking is automatic, unlocking is also automatic.
-        // 🤔 Question: Why do we call .unwrap() on the lock? 
+        // 🤔 Question: Why do we call .unwrap() on the lock?
         // - Hint: What is a "Poisoned Lock"?
         // TODO: Implement lookup from the HashMap
-        unimplemented!()
+        self.entries.read().unwrap().get(key).cloned()
+        //unimplemented!()
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::thread;
 
     #[test]
     fn attempt_get_a_key_from_empty_cache() {
@@ -75,5 +78,18 @@ mod tests {
 
         let value = cache.get("rustconf").unwrap();
         assert_eq!(value, "2026");
+    }
+
+    #[test]
+    fn get_existing_key_in_a_scoped_thread() {
+        let cache = Cache::new();
+        cache.put(String::from("rustconf"), String::from("2026"));
+
+        thread::scope(|scope| {
+            scope.spawn(|| {
+                let value = cache.get("rustconf").unwrap();
+                assert_eq!(value, "2026");
+            });
+        });
     }
 }
