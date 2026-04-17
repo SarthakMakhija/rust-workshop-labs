@@ -32,8 +32,7 @@ where
     // 🤔 Question: Do we need &mut self? If yes, why? If not, why?
     fn put(&self, key: K, value: V) {
         // TODO: Implement insertion into the HashMap
-        self.entries.write().unwrap().insert(key, value);
-        //unimplemented!()
+        unimplemented!()
     }
 
     // ❓ The Lifetime Paradox.
@@ -53,8 +52,7 @@ where
         // 🤔 Question: Why do we call .unwrap() on the lock?
         // - Hint: What is a "Poisoned Lock"?
         // TODO: Implement lookup from the HashMap
-        self.entries.read().unwrap().get(key).cloned()
-        //unimplemented!()
+        unimplemented!()
     }
 }
 
